@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bona Pizza — ¡Simplemente la Mejor!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #CC1515;
+      --red2: #FF2828;
+      --green: #1A7A1A;
+      --green2: #22A022;
+      --gold: #FFD700;
+      --gold2: #CC9900;
+      --dark: #080303;
+      --dark2: #120707;
+      --dark3: #1C0B0B;
+      --card: rgba(255,255,255,0.04);
+      --card-h: rgba(255,255,255,0.07);
+      --text: #F2EDED;
+      --muted: #9A8585;
+      --br: rgba(204,21,21,0.25);
+      --bg: rgba(26,122,26,0.25);
+      --bgold: rgba(255,215,0,0.3);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Open Sans',sans-serif; background:var(--dark); color:var(--text); overflow-x:hidden; line-height:1.6; }
+    a { text-decoration:none; color:inherit; }
+
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:var(--dark); }
+    ::-webkit-scrollbar-thumb { background:var(--red); border-radius:3px; }
+
+    /* NAV */
+    .nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      padding:1.1rem 2rem;
+      display:flex; align-items:center; justify-content:space-between;
+      transition:background .4s, border-color .4s;
+    }
+    .nav.scrolled {
+      background:rgba(8,3,3,.96);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--br);
+    }
+    .nav-logo { font-family:'Bebas Neue',cursive; font-size:1.9rem; letter-spacing:3px; line-height:1; }
+    .nav-logo .b { color:var(--gold); }
+    .nav-logo .p { color:var(--red); }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a {
+      font-family:'Oswald',sans-serif; font-size:.78rem;
+      letter-spacing:2px; text-transform:uppercase;
+      color:var(--muted); transition:color .2s;
+    }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-toggle {
+      display:none; flex-direction:column; gap:5px;
+      cursor:pointer; background:none; border:none; padding:4px;
+    }
+    .nav-toggle span { display:block; width:24px; height:2px; background:var(--text); border-radius:2px; transition:all .3s; }
+
+    /* HERO */
+    .hero {
+      position:relative; min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      text-align:center; overflow:hidden; background:var(--dark);
+    }
+    .hero::before {
+      content:'';
+      position:absolute; inset:0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(204,21,21,.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 15% 85%, rgba(26,122,26,.08) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 20% at 85% 15%, rgba(255,215,0,.06) 0%, transparent 50%);
+    }
+    .hd { position:absolute; border-radius:50%; pointer-events:none; }
+    .hd1 { width:600px; height:600px; border:1.5px solid var(--red); opacity:.07; top:-100px; right:-150px; animation:flt 8s ease-in-out infinite; }
+    .hd2 { width:400px; height:400px; border:1.5px solid var(--gold); opacity:.07; bottom:-80px; left:-100px; animation:flt 10s ease-in-out infinite reverse; }
+    .hd3 { width:200px; height:200px; background:var(--red); opacity:.08; top:30%; right:8%; filter:blur(80px); animation:glw 4s ease-in-out infinite; }
+    .hd4 { width:150px; height:150px; background:var(--green); opacity:.1; bottom:25%; left:6%; filter:blur(60px); animation:glw 5s ease-in-out infinite 2s; }
+    @keyframes flt { 0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-20px) rotate(5deg);} }
+    @keyframes glw { 0%,100%{opacity:.08;transform:scale(1);} 50%{opacity:.18;transform:scale(1.2);} }
+
+    .hero-content { position:relative; z-index:2; padding:2rem; max-width:820px; }
+    .hero-eye {
+      font-family:'Oswald',sans-serif; font-size:.78rem; letter-spacing:5px;
+      text-transform:uppercase; color:var(--muted); margin-bottom:1rem;
+      opacity:0; transform:translateY(20px); animation:sup .8s .2s forwards;
+    }
+    .hero-title {
+      font-family:'Bebas Neue',cursive;
+      font-size:clamp(5rem,16vw,13rem);
+      line-height:.88; letter-spacing:4px; margin-bottom:.5rem;
+      opacity:0; transform:translateY(30px); animation:sup .9s .4s forwards;
+    }
+    .hero-title .l1 { color:var(--gold); display:block; }
+    .hero-title .l2 { color:var(--red); display:block; }
+    .hero-sub {
+      font-family:'Oswald',sans-serif; font-size:1.1rem; font-weight:300;
+      letter-spacing:3px; color:var(--muted); margin-bottom:2.5rem; font-style:italic;
+      opacity:0; transform:translateY(20px); animation:sup .8s .6s forwards;
+    }
+    .hero-btns {
+      display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;
+      opacity:0; transform:translateY(20px); animation:sup .8s .8s forwards;
+    }
+    .btn {
+      font-family:'Oswald',sans-serif; font-weight:600; font-size:.82rem;
+      letter-spacing:2px; text-transform:uppercase;
+      padding:.9rem 2.2rem; border-radius:3px; cursor:pointer; border:none;
+      transition:all .3s; display:inline-block;
+    }
+    .btn-r { background:var(--red); color:#fff; }
+    .btn-r:hover { background:var(--red2); transform:translateY(-2px); box-shadow:0 8px 30px rgba(204,21,21,.4); }
+    .btn-o { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.2); }
+    .btn-o:hover { border-color:var(--gold); color:var(--gold); transform:translateY(-2px); }
+    .hero-scroll {
+      position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:.5rem;
+      opacity:0; animation:fin 1s 1.2s forwards;
+    }
+    .hero-scroll span { font-family:'Oswald',sans-serif; font-size:.6rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); }
+    .sline { width:1px; height:40px; background:linear-gradient(to bottom,var(--red),transparent); animation:sl 1.5s ease-in-out infinite 1.5s; }
+    @keyframes sl {
+      0%{transform:scaleY(0);transform-origin:top;}
+      50%{transform:scaleY(1);transform-origin:top;}
+      51%{transform:scaleY(1);transform-origin:bottom;}
+      100%{transform:scaleY(0);transform-origin:bottom;}
+    }
+    @keyframes sup { to{opacity:1;transform:translateY(0);} }
+    @keyframes fin { to{opacity:1;} }
+
+    /* STATS */
+    .stats {
+      padding:5rem 2rem;
+      background:var(--dark2);
+      border-top:1px solid var(--br);
+      border-bottom:1px solid var(--br);
+    }
+    .stats-in {
+      max-width:1200px; margin:0 auto;
+      display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center;
+    }
+    .stats-text h2 { font-family:'Oswald',sans-serif; font-size:2.4rem; font-weight:700; line-height:1.2; margin-bottom:1rem; }
+    .stats-text h2 em { color:var(--red); font-style:normal; }
+    .stats-text p { color:var(--muted); font-size:.95rem; line-height:1.8; max-width:440px; }
+    .stats-nums { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .stat-item { text-align:center; padding:1.5rem; border:1px solid var(--br); border-radius:8px; background:var(--card); }
+    .stat-n { font-family:'Bebas Neue',cursive; font-size:3.5rem; color:var(--gold); line-height:1; display:block; }
+    .stat-l { font-family:'Oswald',sans-serif; font-size:.7rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-top:.2rem; }
+
+    /* SHARED SECTION HEADER */
+    .sec-hdr { text-align:center; margin-bottom:3rem; }
+    .sec-eye { font-family:'Oswald',sans-serif; font-size:.72rem; letter-spacing:4px; text-transform:uppercase; color:var(--muted); margin-bottom:.6rem; }
+    .sec-ttl { font-family:'Bebas Neue',cursive; font-size:clamp(2.5rem,6vw,4.5rem); letter-spacing:3px; line-height:1; }
+    .sec-ttl.r { color:var(--red); }
+    .sec-ttl.g { color:var(--green2); }
+    .sec-ttl.gold { color:var(--gold); }
+    .sec-div { width:60px; height:3px; margin:1rem auto 0; border-radius:2px; }
+    .sec-div.r { background:var(--red); }
+    .sec-div.gold { background:var(--gold); }
+
+    /* MENU */
+    .menu { padding:5rem 2rem; background:var(--dark); }
+    .menu-in { max-width:1200px; margin:0 auto; }
+
+    .menu-tabs {
+      display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center;
+      margin-bottom:3rem;
+      position:sticky; top:65px; z-index:50;
+      padding:.9rem 1rem;
+      background:rgba(8,3,3,.97);
+      backdrop-filter:blur(12px);
+      border-radius:8px; border:1px solid var(--br);
+    }
+    .tab {
+      font-family:'Oswald',sans-serif; font-size:.72rem; letter-spacing:1.5px; text-transform:uppercase;
+      padding:.55rem 1.1rem; border-radius:4px; cursor:pointer;
+      border:1px solid transparent; background:transparent; color:var(--muted);
+      transition:all .25s;
+    }
+    .tab:hover { color:var(--text); border-color:var(--br); }
+    .tab.on { background:var(--red); color:#fff; border-color:var(--red); }
+    .tab.on.gr { background:var(--green); border-color:var(--green); }
+    .tab.on.gd { background:linear-gradient(135deg,var(--gold2),var(--gold)); color:#000; border-color:var(--gold); }
+
+    .panel { display:none; }
+    .panel.on { display:block; }
+
+    /* CAT HEADER */
+    .cat-hdr { display:flex; align-items:center; gap:1rem; margin-bottom:2rem; padding-bottom:1rem; border-bottom:1px solid var(--br); }
+    .cat-hdr.gr { border-bottom-color:var(--bg); }
+    .cat-hdr.gd { border-bottom-color:var(--bgold); }
+    .cat-badge { font-family:'Bebas Neue',cursive; font-size:.85rem; letter-spacing:3px; padding:.3rem .8rem; border-radius:3px; }
+    .cat-badge.r { background:var(--red); color:#fff; }
+    .cat-badge.gr { background:var(--green); color:#fff; }
+    .cat-badge.gd { background:var(--gold); color:#000; }
+    .cat-ttl { font-family:'Oswald',sans-serif; font-size:1.7rem; font-weight:700; flex:1; }
+    .cat-ttl.r { color:var(--red); }
+    .cat-ttl.gr { color:var(--green2); }
+    .cat-ttl.gd { color:var(--gold); }
+
+    /* PIZZA GRID */
+    .pizza-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:.9rem; margin-bottom:1.5rem; }
+    .pcard {
+      background:var(--card); border:1px solid var(--br); border-radius:8px;
+      padding:1.1rem 1.2rem; transition:all .3s;
+    }
+    .pcard:hover { background:var(--card-h); transform:translateY(-3px); border-color:var(--red); box-shadow:0 8px 28px rgba(204,21,21,.15); }
+    .pcard.gr:hover { border-color:var(--green); box-shadow:0 8px 28px rgba(26,122,26,.15); }
+    .pname { font-family:'Oswald',sans-serif; font-size:.95rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:.35rem; }
+    .pname.r { color:var(--red); }
+    .pname.gr { color:var(--green2); }
+    .pingr { font-size:.76rem; color:var(--muted); line-height:1.5; }
+
+    /* PRICE TABLE */
+    .ptw { background:var(--card); border:1px solid var(--br); border-radius:8px; overflow:hidden; margin-top:1rem; }
+    .ptw.gr { border-color:var(--bg); }
+    .ptw.gd { border-color:var(--bgold); }
+    .pth { padding:.9rem 1.4rem; background:var(--red); font-family:'Oswald',sans-serif; font-size:.82rem; letter-spacing:2px; text-transform:uppercase; }
+    .pth.gr { background:var(--green); }
+    .pth.gd { background:linear-gradient(90deg,var(--gold2),var(--gold)); color:#000; }
+    .pt-scroll { overflow-x:auto; }
+    .pt { display:grid; min-width:480px; }
+    .pt.cols6 { grid-template-columns:repeat(6,1fr); }
+    .pt.cols5 { grid-template-columns:repeat(5,1fr); }
+    .pcell { padding:.85rem .4rem; text-align:center; border-right:1px solid rgba(255,255,255,.04); border-bottom:1px solid rgba(255,255,255,.04); }
+    .pcell:last-child { border-right:none; }
+    .pcell.lbl { font-family:'Oswald',sans-serif; font-size:.68rem; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
+    .pcell.prc { font-family:'Bebas Neue',cursive; font-size:1.5rem; color:var(--gold); }
+    .pcell.hi { background:rgba(255,215,0,.05); }
+
+    /* SUPREMA */
+    .supr-card {
+      background:linear-gradient(135deg,rgba(204,153,0,.07),rgba(255,215,0,.02));
+      border:1px solid var(--bgold); border-radius:12px;
+      padding:3rem 2rem; text-align:center; position:relative; overflow:hidden;
+    }
+    .supr-card::before {
+      content:'SUPREMA'; position:absolute; top:-15px; right:5px;
+      font-family:'Bebas Neue',cursive; font-size:8rem;
+      color:rgba(255,215,0,.04); pointer-events:none; line-height:1;
+    }
+    .supr-pill { display:inline-block; background:linear-gradient(135deg,var(--gold2),var(--gold)); color:#000; font-family:'Bebas Neue',cursive; font-size:.85rem; letter-spacing:3px; padding:.3rem 1rem; border-radius:20px; margin-bottom:1.5rem; }
+    .supr-ttl { font-family:'Bebas Neue',cursive; font-size:3rem; color:var(--gold); letter-spacing:3px; margin-bottom:.4rem; }
+    .supr-sub { font-family:'Oswald',sans-serif; font-size:.85rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:2rem; }
+    .supr-tags { display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center; margin-bottom:2rem; }
+    .itag { font-size:.75rem; padding:.3rem .8rem; border-radius:20px; border:1px solid var(--bgold); color:var(--muted); }
+
+    /* EXTRAS */
+    .extras-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; margin-top:1.5rem; }
+    .ecard {
+      background:var(--card); border:1px solid var(--bgold); border-radius:8px;
+      padding:1.4rem; transition:all .3s;
+    }
+    .ecard:hover { border-color:var(--gold); transform:translateY(-2px); }
+    .ename { font-family:'Oswald',sans-serif; font-size:.82rem; font-weight:600; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin-bottom:.3rem; }
+    .edesc { font-size:.73rem; color:var(--muted); margin-bottom:.8rem; line-height:1.4; }
+    .eprow { display:flex; justify-content:space-between; font-size:.74rem; margin-bottom:.15rem; }
+    .eprow .s { color:var(--muted); }
+    .eprow .a { color:var(--gold); font-family:'Oswald',sans-serif; }
+
+    /* FOOD SECTIONS */
+    .food-sec { padding:5rem 2rem; background:var(--dark2); }
+    .food-in { max-width:1200px; margin:0 auto; }
+    .food-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+    .fcard {
+      background:var(--card); border:1px solid var(--br); border-radius:8px;
+      padding:1.1rem 1.4rem;
+      display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;
+      transition:all .3s;
+    }
+    .fcard:hover { background:var(--card-h); transform:translateY(-2px); border-color:var(--red); }
+    .fname { font-family:'Oswald',sans-serif; font-size:.88rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:.25rem; }
+    .fdesc { font-size:.74rem; color:var(--muted); line-height:1.4; }
+    .fprice { font-family:'Bebas Neue',cursive; font-size:1.65rem; color:var(--gold); white-space:nowrap; }
+    .combo-banner {
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+      background:var(--card); border:1px solid var(--br); border-radius:10px;
+      padding:1.8rem 2rem; margin-top:1.5rem;
+    }
+    .combo-label { font-family:'Bebas Neue',cursive; font-size:1.7rem; color:var(--gold); letter-spacing:2px; }
+    .combo-desc { font-size:.78rem; color:var(--muted); margin-top:.25rem; }
+    .combo-price { font-family:'Bebas Neue',cursive; font-size:3.5rem; color:var(--red); }
+
+    /* ENTRADAS */
+    .entr-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:1rem; }
+    .encard {
+      background:var(--card); border:1px solid var(--br); border-radius:8px;
+      padding:1.4rem; text-align:center; transition:all .3s;
+    }
+    .encard:hover { background:var(--card-h); transform:translateY(-3px); border-color:var(--red); box-shadow:0 8px 24px rgba(204,21,21,.12); }
+    .en-ico { font-size:1.8rem; margin-bottom:.6rem; }
+    .en-name { font-family:'Oswald',sans-serif; font-size:.82rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:.4rem; }
+    .en-price { font-family:'Bebas Neue',cursive; font-size:2rem; color:var(--gold); }
+
+    /* BEBIDAS */
+    .beb-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:1rem; }
+    .bcard {
+      background:var(--card); border:1px solid var(--br); border-radius:8px;
+      padding:1.2rem; text-align:center; transition:all .3s;
+    }
+    .bcard:hover { border-color:var(--gold); transform:translateY(-2px); }
+    .bname { font-family:'Oswald',sans-serif; font-size:.78rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:.4rem; }
+    .bprice { font-family:'Bebas Neue',cursive; font-size:2rem; color:var(--gold); }
+
+    /* PROMO */
+    .promo {
+      position:relative; padding:5rem 2rem;
+      background:linear-gradient(135deg,var(--dark3),var(--dark2));
+      overflow:hidden;
+    }
+    .promo::before {
+      content:'2×1'; position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      font-family:'Bebas Neue',cursive; font-size:24rem;
+      color:rgba(204,21,21,.04); pointer-events:none; white-space:nowrap; line-height:1;
+    }
+    .promo-in { max-width:880px; margin:0 auto; text-align:center; position:relative; z-index:2; }
+    .promo-pill { display:inline-block; background:var(--red); font-family:'Bebas Neue',cursive; font-size:.95rem; letter-spacing:3px; padding:.4rem 1.2rem; border-radius:20px; margin-bottom:1.5rem; }
+    .promo-days { font-family:'Bebas Neue',cursive; font-size:clamp(3rem,8vw,6rem); color:var(--gold); letter-spacing:4px; line-height:1; margin-bottom:.5rem; }
+    .promo-deal { font-family:'Oswald',sans-serif; font-size:clamp(1.1rem,3vw,1.9rem); font-weight:300; margin-bottom:1rem; }
+    .promo-deal strong { color:var(--red); font-weight:700; }
+    .promo-amt { font-family:'Bebas Neue',cursive; font-size:clamp(4rem,10vw,8rem); color:#fff; line-height:1; margin-bottom:.5rem; }
+    .promo-amt span { color:var(--gold); }
+    .promo-var { font-family:'Oswald',sans-serif; font-size:.82rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+
+    /* LOCATIONS */
+    .locs { padding:5rem 2rem; background:var(--dark); }
+    .locs-in { max-width:1200px; margin:0 auto; }
+    .locs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(265px,1fr)); gap:1.5rem; margin-top:3rem; }
+    .loc-card {
+      background:var(--card); border:1px solid var(--br); border-radius:10px;
+      padding:2rem; position:relative; overflow:hidden; transition:all .3s;
+    }
+    .loc-card::before {
+      content:attr(data-n); position:absolute; top:-15px; right:8px;
+      font-family:'Bebas Neue',cursive; font-size:5.5rem;
+      color:rgba(204,21,21,.06); pointer-events:none; line-height:1;
+    }
+    .loc-card:hover { border-color:var(--red); transform:translateY(-4px); box-shadow:0 12px 40px rgba(204,21,21,.14); }
+    .loc-num { font-family:'Bebas Neue',cursive; font-size:.82rem; letter-spacing:3px; color:var(--red); margin-bottom:.4rem; }
+    .loc-name { font-family:'Oswald',sans-serif; font-size:1.15rem; font-weight:700; margin-bottom:1rem; }
+    .loc-rows { display:flex; flex-direction:column; gap:.7rem; }
+    .loc-row { display:flex; gap:.7rem; align-items:flex-start; font-size:.8rem; color:var(--muted); line-height:1.5; }
+    .loc-ico { color:var(--red); flex-shrink:0; margin-top:2px; }
+    .loc-hrs { margin-top:1.2rem; padding-top:1.2rem; border-top:1px solid var(--br); }
+    .hrs-lbl { font-family:'Oswald',sans-serif; font-size:.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:.2rem; }
+    .hrs-val { font-family:'Oswald',sans-serif; font-size:.92rem; color:var(--gold); }
+
+    /* FOOTER */
+    footer { background:var(--dark3); border-top:1px solid var(--br); padding:2.5rem 2rem; text-align:center; }
+    .ft-logo { font-family:'Bebas Neue',cursive; font-size:2.6rem; letter-spacing:4px; margin-bottom:.4rem; }
+    .ft-logo .b { color:var(--gold); }
+    .ft-logo .p { color:var(--red); }
+    .ft-tag { font-family:'Oswald',sans-serif; font-size:.72rem; letter-spacing:3px; color:var(--muted); text-transform:uppercase; font-style:italic; margin-bottom:1.5rem; }
+    .ft-copy { font-size:.72rem; color:rgba(255,255,255,.18); }
+
+    /* SCROLL ANIMATIONS */
+    [data-rev] { opacity:0; transition:opacity .7s ease, transform .7s ease; }
+    [data-rev="up"] { transform:translateY(40px); }
+    [data-rev="left"] { transform:translateX(-40px); }
+    [data-rev="right"] { transform:translateX(40px); }
+    [data-rev="sc"] { transform:scale(.9); }
+    [data-rev].vis { opacity:1; transform:none; }
+    [data-sg] { opacity:0; transform:translateY(28px); transition:opacity .55s ease, transform .55s ease; }
+    [data-sg].vis { opacity:1; transform:none; }
+
+    /* RESPONSIVE */
+    @media(max-width:900px) {
+      .stats-in { grid-template-columns:1fr; gap:2.5rem; }
+    }
+    @media(max-width:768px) {
+      .nav-links { display:none; }
+      .nav-links.open {
+        display:flex; flex-direction:column;
+        position:fixed; inset:0;
+        background:rgba(8,3,3,.98);
+        align-items:center; justify-content:center;
+        gap:2rem; z-index:99;
+      }
+      .nav-links.open a { font-size:1.5rem; letter-spacing:4px; }
+      .nav-toggle { display:flex; }
+      .stats-nums { grid-template-columns:1fr 1fr; }
+      .locs-grid { grid-template-columns:1fr; }
+      .menu-tabs { top:58px; }
+      .food-grid { grid-template-columns:1fr; }
+      .promo::before { font-size:12rem; }
+    }
+    @media(max-width:480px) {
+      .pizza-grid { grid-template-columns:1fr 1fr; }
+      .entr-grid { grid-template-columns:1fr 1fr; }
+      .beb-grid { grid-template-columns:1fr 1fr; }
+      .extras-grid { grid-template-columns:1fr; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      *,*::before,*::after { animation:none!important; transition:none!important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#hero" class="nav-logo"><span class="b">BONA</span><span class="p"> PIZZA</span></a>
+  <ul class="nav-links" id="nl">
+    <li><a href="#hero">Inicio</a></li>
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#promo">Promociones</a></li>
+    <li><a href="#sucursales">Sucursales</a></li>
+  </ul>
+  <button class="nav-toggle" id="nt" aria-label="Menú"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hd hd1"></div>
+  <div class="hd hd2"></div>
+  <div class="hd hd3"></div>
+  <div class="hd hd4"></div>
+  <div class="hero-content">
+    <p class="hero-eye">Cd. Lázaro Cárdenas · Michoacán</p>
+    <h1 class="hero-title"><span class="l1">BONA</span><span class="l2">PIZZA</span></h1>
+    <p class="hero-sub">¡Simplemente la Mejor!</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn btn-r">Ver Menú Completo</a>
+      <a href="#sucursales" class="btn btn-o">Nuestras Sucursales</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="sline"></div></div>
+</section>
+
+<!-- STATS -->
+<section class="stats" id="nosotros">
+  <div class="stats-in">
+    <div class="stats-text" data-rev="left">
+      <h2>La pizza favorita de <em>Lázaro Cárdenas</em></h2>
+      <p>Con 4 sucursales en la ciudad, Bona Pizza es la opción favorita de las familias lazarocardenenses. Pizzas clásicas, especiales, la inigualable Pizza Suprema doblemente gruesa y mucho más — siempre con los mejores ingredientes.</p>
+    </div>
+    <div class="stats-nums" data-rev="right">
+      <div class="stat-item"><span class="stat-n" data-ct="4">4</span><span class="stat-l">Sucursales</span></div>
+      <div class="stat-item"><span class="stat-n" data-ct="25">25</span><span class="stat-l">Variedades de pizza</span></div>
+      <div class="stat-item"><span class="stat-n" data-ct="7">7</span><span class="stat-l">Días a la semana</span></div>
+      <div class="stat-item"><span class="stat-n" data-ct="6">6</span><span class="stat-l">Tamaños disponibles</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MENÚ -->
+<section class="menu" id="menu">
+  <div class="menu-in">
+    <div class="sec-hdr" data-rev="up">
+      <p class="sec-eye">Nuestra Carta</p>
+      <h2 class="sec-ttl gold">MENÚ COMPLETO</h2>
+      <div class="sec-div gold"></div>
+    </div>
+
+    <div class="menu-tabs" id="tabs">
+      <button class="tab on" data-tab="clasicas">Pizzas Clásicas</button>
+      <button class="tab" data-tab="especiales">Pizzas Especiales</button>
+      <button class="tab" data-tab="suprema">Pizza Suprema</button>
+      <button class="tab" data-tab="antojitos">Antojitos</button>
+      <button class="tab" data-tab="tortas">Tortas</button>
+      <button class="tab" data-tab="entradas">Entradas</button>
+      <button class="tab" data-tab="bebidas">Bebidas</button>
+    </div>
+
+    <!-- CLÁSICAS -->
+    <div class="panel on" id="p-clasicas">
+      <div class="cat-hdr"><span class="cat-badge r">Clásicas</span><h3 class="cat-ttl r">Pizzas Clásicas</h3></div>
+      <div class="pizza-grid">
+        <div class="pcard" data-sg><div class="pname r">Loca</div><div class="pingr">Salchicha, Jamón, Chorizo</div></div>
+        <div class="pcard" data-sg><div class="pname r">Hawaiana</div><div class="pingr">Piña y Jamón</div></div>
+        <div class="pcard" data-sg><div class="pname r">Peperoni</div><div class="pingr">Peperoni</div></div>
+        <div class="pcard" data-sg><div class="pname r">Mixta</div><div class="pingr">Salchicha y Jamón</div></div>
+        <div class="pcard" data-sg><div class="pname r">Napolitana</div><div class="pingr">Jamón, Mayonesa y Jalapeños</div></div>
+      </div>
+      <div class="ptw" data-rev="up">
+        <div class="pth">Precios — Pizzas Clásicas</div>
+        <div class="pt-scroll">
+          <div class="pt cols6">
+            <div class="pcell lbl">Escolar</div><div class="pcell lbl">Personal</div><div class="pcell lbl">Chica</div><div class="pcell lbl">Mediana</div><div class="pcell lbl">Grande</div><div class="pcell lbl">Jumbo</div>
+            <div class="pcell prc">$65</div><div class="pcell prc">$139</div><div class="pcell prc">$185</div><div class="pcell prc hi">$215</div><div class="pcell prc">$279</div><div class="pcell prc">$459</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESPECIALES -->
+    <div class="panel" id="p-especiales">
+      <div class="cat-hdr gr"><span class="cat-badge gr">Especiales</span><h3 class="cat-ttl gr">Pizzas Especiales</h3></div>
+      <div class="pizza-grid">
+        <div class="pcard gr" data-sg><div class="pname gr">BBQ</div><div class="pingr">Costilla de cerdo con salsa BBQ</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Hot BBQ</div><div class="pingr">Costilla de cerdo con salsa BBQ picante</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Texas</div><div class="pingr">Pollo, Chorizo y Pimiento</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Italiana</div><div class="pingr">Peperoni, Champiñón y Jamón</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Al Pastor</div><div class="pingr">Carne Al Pastor, Piña y Cebolla</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Tampiqueña</div><div class="pingr">Bistec de Res, Pimiento y Cebolla</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Ranchera</div><div class="pingr">Chorizo, Jamón, Cebolla y Jalapeños</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Pierna</div><div class="pingr">Pierna, Cebolla y Pimiento</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Pollo</div><div class="pingr">Pollo, Cebolla y Pimiento</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Pollocino</div><div class="pingr">Pollo, Tocino y Pimiento</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Carnes Frías</div><div class="pingr">Salami, Jamón, Salchicha y Tocino</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Jamonchiken</div><div class="pingr">Jamón, Pollo y Pimiento</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Jamonchina</div><div class="pingr">Jamón, Champiñón y Pimiento</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Tropical</div><div class="pingr">Champiñón, Piña, Peperoni y Pimiento</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Vaquera</div><div class="pingr">Fríjoles, Chorizo, Jalapeño y Cebolla</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Hot-Chiken</div><div class="pingr">Pollo, Fríjoles y Jalapeños</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Japonesa</div><div class="pingr">Pollo, Champiñón y Pimiento</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Marinera</div><div class="pingr">Atún, Jitomate, Jalapeños, Cebolla y Mayonesa</div></div>
+        <div class="pcard gr" data-sg><div class="pname gr">Vegetariana</div><div class="pingr">Champiñón, Elote, Piña, Pimiento y Cebolla</div></div>
+      </div>
+      <p style="text-align:center;padding:1.2rem 0;font-size:.82rem;color:var(--muted);">
+        <span style="color:var(--green2);font-family:'Oswald',sans-serif;letter-spacing:1px;">★ También puedes pedir tu pizza con los 3 ingredientes que tú prefieras</span><br>
+        Champiñón · Salami · Piña · Pimiento · Salchicha · Jamón · Chorizo · Pierna · Pollo
+      </p>
+      <div class="ptw gr" data-rev="up">
+        <div class="pth gr">Precios — Pizzas Especiales</div>
+        <div class="pt-scroll">
+          <div class="pt cols6">
+            <div class="pcell lbl">Escolar</div><div class="pcell lbl">Personal</div><div class="pcell lbl">Chica</div><div class="pcell lbl">Mediana</div><div class="pcell lbl">Grande</div><div class="pcell lbl">Jumbo</div>
+            <div class="pcell prc">$75</div><div class="pcell prc">$157</div><div class="pcell prc">$197</div><div class="pcell prc hi">$235</div><div class="pcell prc">$299</div><div class="pcell prc">$549</div>
+          </div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:.73rem;color:var(--muted);margin-top:.6rem;">★ Tamaño Jumbo: para 10 a 12 personas</p>
+    </div>
+
+    <!-- SUPREMA -->
+    <div class="panel" id="p-suprema">
+      <div class="supr-card" data-rev="sc">
+        <div class="supr-pill">★ PIZZA ESTRELLA ★</div>
+        <h3 class="supr-ttl">PIZZA SUPREMA</h3>
+        <p class="supr-sub">Doblemente Gruesa</p>
+        <div class="supr-tags">
+          <span class="itag">Salchicha</span><span class="itag">Jamón</span><span class="itag">Chorizo</span>
+          <span class="itag">Pierna</span><span class="itag">Pollo</span><span class="itag">Champiñón</span>
+          <span class="itag">Salami</span><span class="itag">Piña</span><span class="itag">Pimiento</span>
+        </div>
+        <div class="ptw gd">
+          <div class="pth gd">Precios — Pizza Suprema</div>
+          <div class="pt-scroll">
+            <div class="pt cols5">
+              <div class="pcell lbl">Personal</div><div class="pcell lbl">Chica</div><div class="pcell lbl">Mediana</div><div class="pcell lbl">Grande</div><div class="pcell lbl">Jumbo</div>
+              <div class="pcell prc">$175</div><div class="pcell prc">$215</div><div class="pcell prc hi">$285</div><div class="pcell prc">$335</div><div class="pcell prc">$665</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bordos y extras -->
+      <div style="margin-top:3rem;" data-rev="up">
+        <div class="cat-hdr gd"><span class="cat-badge gd">Extras</span><h3 class="cat-ttl gd">Bordo de Queso · Bordo Relleno de Salchicha</h3></div>
+        <div class="extras-grid">
+          <div class="ecard">
+            <div class="ename">Salchibordo</div>
+            <div class="edesc">Bordo relleno de salchicha — Nueva opción</div>
+            <div class="eprow"><span class="s">Personal</span><span class="a">$45</span></div>
+            <div class="eprow"><span class="s">Chica</span><span class="a">$55</span></div>
+            <div class="eprow"><span class="s">Mediana</span><span class="a">$65</span></div>
+            <div class="eprow"><span class="s">Grande</span><span class="a">$75</span></div>
+            <div class="eprow"><span class="s">Jumbo</span><span class="a">$119</span></div>
+          </div>
+          <div class="ecard">
+            <div class="ename">Bordo de Queso</div>
+            <div class="edesc">Borde crujiente relleno de queso fundido</div>
+            <div class="eprow"><span class="s">Personal</span><span class="a">$45</span></div>
+            <div class="eprow"><span class="s">Chica</span><span class="a">$55</span></div>
+            <div class="eprow"><span class="s">Mediana</span><span class="a">$65</span></div>
+            <div class="eprow"><span class="s">Grande</span><span class="a">$75</span></div>
+            <div class="eprow"><span class="s">Jumbo</span><span class="a">$119</span></div>
+          </div>
+          <div class="ecard">
+            <div class="ename">Ingrediente Extra</div>
+            <div class="edesc">Añade un ingrediente adicional a cualquier pizza</div>
+            <div class="eprow"><span class="s">Escolar / Personal / Chica</span><span class="a">$20</span></div>
+            <div class="eprow"><span class="s">Mediana / Grande</span><span class="a">$25</span></div>
+            <div class="eprow"><span class="s">Jumbo</span><span class="a">$40</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANTOJITOS -->
+    <div class="panel" id="p-antojitos">
+      <div class="cat-hdr"><span class="cat-badge r">Antojitos</span><h3 class="cat-ttl r">Antojitos</h3></div>
+      <div class="food-grid">
+        <div class="fcard" data-sg><div><div class="fname">Burritos</div><div class="fdesc">Pollo y Pierna · Orden de tres</div></div><div class="fprice">$130</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Quesadillas de Harina</div><div class="fdesc">Orden de tres</div></div><div class="fprice">$75</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Sincronizadas</div><div class="fdesc">Orden de tres</div></div><div class="fprice">$89</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Molletes</div><div class="fdesc">Fríjol, Chorizo, Pastor, Pollo, Pierna</div></div><div class="fprice">$105</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Gringas</div><div class="fdesc">Al Pastor, Pollo, Pierna · Orden de tres</div></div><div class="fprice">$130</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Hot Dog Salchicha Jumbo</div><div class="fdesc"></div></div><div class="fprice">$40</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Platillo Bona</div><div class="fdesc">HotDog + Gringa + Sincronizada + Papas + Refresco</div></div><div class="fprice">$159</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Hamb. Arrachera Clásica</div><div class="fdesc">Arrachera, Queso Amarillo</div></div><div class="fprice">$89</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Hamb. Arrachera Especial</div><div class="fdesc">Arrachera, Jamón, Salchicha, Q. Amarillo y Adobera</div></div><div class="fprice">$101</div></div>
+      </div>
+      <div class="combo-banner" data-rev="up">
+        <div>
+          <div class="combo-label">COMBO HAMBURGUESA</div>
+          <div class="combo-desc">1 Hamburguesa · ½ Orden de Papas · 1 Refresco 355 ml</div>
+        </div>
+        <div class="combo-price">$149</div>
+      </div>
+    </div>
+
+    <!-- TORTAS -->
+    <div class="panel" id="p-tortas">
+      <div class="cat-hdr"><span class="cat-badge r">Tortas</span><h3 class="cat-ttl r">Tortas</h3></div>
+      <div class="food-grid">
+        <div class="fcard" data-sg><div><div class="fname">Tortas Clásicas</div><div class="fdesc">Jamón · Adobera · Salchicha · Chorizo<br>Adobera o Queso extra +$10</div></div><div class="fprice">$65</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Al Pastor</div></div><div class="fprice">$89</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Al Pollo</div></div><div class="fprice">$89</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Milanesa</div></div><div class="fprice">$89</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Pierna</div></div><div class="fprice">$85</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Cubana</div><div class="fdesc">Pierna, Chorizo, Jamón, Queso y Salchicha</div></div><div class="fprice">$105</div></div>
+        <div class="fcard" data-sg><div><div class="fname">Hawaiana</div><div class="fdesc">Jamón, Piña y Queso</div></div><div class="fprice">$85</div></div>
+      </div>
+    </div>
+
+    <!-- ENTRADAS -->
+    <div class="panel" id="p-entradas">
+      <div class="cat-hdr"><span class="cat-badge r">Entradas</span><h3 class="cat-ttl r">Entradas</h3></div>
+      <div class="entr-grid">
+        <div class="encard" data-sg><div class="en-ico">🍟</div><div class="en-name">Papas a la Francesa</div><div class="en-price">$75</div></div>
+        <div class="encard" data-sg><div class="en-ico">🍟</div><div class="en-name">Papas Gajo a la Francesa</div><div class="en-price">$95</div></div>
+        <div class="encard" data-sg><div class="en-ico">🍗</div><div class="en-name">Nugetts (5 pzs)</div><div class="en-price">$105</div></div>
+        <div class="encard" data-sg><div class="en-ico">🧀</div><div class="en-name">Dedos de Queso (5 pzs)</div><div class="en-price">$110</div></div>
+        <div class="encard" data-sg><div class="en-ico">🧅</div><div class="en-name">Aros de Cebolla (10 pzs)</div><div class="en-price">$110</div></div>
+        <div class="encard" data-sg><div class="en-ico">🌭</div><div class="en-name">Salchipapas</div><div class="en-price">$89</div></div>
+        <div class="encard" data-sg><div class="en-ico">🍖</div><div class="en-name">Boneless (5 pzs)</div><div class="en-price">$145</div></div>
+      </div>
+    </div>
+
+    <!-- BEBIDAS -->
+    <div class="panel" id="p-bebidas">
+      <div class="cat-hdr gd"><span class="cat-badge gd">Bebidas</span><h3 class="cat-ttl gd">Bebidas</h3></div>
+      <div class="beb-grid">
+        <div class="bcard" data-sg><div class="bname">Refresco 355 ml</div><div class="bprice">$28</div></div>
+        <div class="bcard" data-sg><div class="bname">Refresco 600 ml</div><div class="bprice">$35</div></div>
+        <div class="bcard" data-sg><div class="bname">Refrescos 2 Lt</div><div class="bprice">$80</div></div>
+        <div class="bcard" data-sg><div class="bname">Agua 600 ml</div><div class="bprice">$17</div></div>
+        <div class="bcard" data-sg><div class="bname">Jugos del Valle</div><div class="bprice">$28</div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROMO -->
+<section class="promo" id="promo">
+  <div class="promo-in">
+    <div class="promo-pill" data-rev="up">OFERTA ESPECIAL</div>
+    <div class="promo-days" data-rev="up">MARTES Y MIÉRCOLES</div>
+    <p class="promo-deal" data-rev="up"><strong>2×1</strong> en Pizzas Medianas Estilo Americana</p>
+    <div class="promo-amt" data-rev="sc"><span>$</span>230</div>
+    <p class="promo-var" data-rev="up">Peperoni · Loca · Hawaiana · Mixta</p>
+  </div>
+</section>
+
+<!-- SUCURSALES -->
+<section class="locs" id="sucursales">
+  <div class="locs-in">
+    <div class="sec-hdr" data-rev="up">
+      <p class="sec-eye">Encuéntranos</p>
+      <h2 class="sec-ttl r">NUESTRAS SUCURSALES</h2>
+      <div class="sec-div r"></div>
+    </div>
+    <div class="locs-grid">
+      <div class="loc-card" data-n="1" data-sg>
+        <div class="loc-num">BONA PIZZA 1</div>
+        <div class="loc-name">Col. Centro</div>
+        <div class="loc-rows">
+          <div class="loc-row"><span class="loc-ico">📍</span><span>Av. H. Esc. Naval Militar #39, Col. Centro, Cd. Lázaro Cárdenas</span></div>
+          <div class="loc-row"><span class="loc-ico">📞</span><div>753-532-30-01<br>753-537-18-80<br><span style="color:var(--gold)">CEL: 753-142-21-41</span></div></div>
+        </div>
+        <div class="loc-hrs"><div class="hrs-lbl">Horario</div><div class="hrs-val">Lun – Dom · 8:00 am – 11:00 pm</div></div>
+      </div>
+      <div class="loc-card" data-n="2" data-sg>
+        <div class="loc-num">BONA PIZZA 2</div>
+        <div class="loc-name">Fracc. Napoleno Gómez Sada</div>
+        <div class="loc-rows">
+          <div class="loc-row"><span class="loc-ico">📍</span><span>Av. Noyola #245, Fracc. Napoleno Gómez Sada, Cd. Lázaro Cárdenas</span></div>
+          <div class="loc-row"><span class="loc-ico">📞</span><div>753-537-77-18<br>753-537-77-19<br><span style="color:var(--gold)">CEL: 753-142-22-07</span></div></div>
+        </div>
+        <div class="loc-hrs"><div class="hrs-lbl">Horario</div><div class="hrs-val">Lun – Dom · 1:00 pm – 11:00 pm</div></div>
+      </div>
+      <div class="loc-card" data-n="3" data-sg>
+        <div class="loc-num">BONA PIZZA 3</div>
+        <div class="loc-name">Las Guacamayas</div>
+        <div class="loc-rows">
+          <div class="loc-row"><span class="loc-ico">📍</span><span>Av. Zinapécuaro #30, Col. Emiliano Zapata, Las Guacamayas</span></div>
+          <div class="loc-row"><span class="loc-ico">📞</span><div>753-531-14-47<br>753-531-14-48<br><span style="color:var(--gold)">CEL: 753-115-12-79</span></div></div>
+        </div>
+        <div class="loc-hrs"><div class="hrs-lbl">Horario</div><div class="hrs-val">Lun – Dom · 9:00 am – 10:00 pm</div></div>
+      </div>
+      <div class="loc-card" data-n="4" data-sg>
+        <div class="loc-num">BONA PIZZA 4</div>
+        <div class="loc-name">Buenos Aires</div>
+        <div class="loc-rows">
+          <div class="loc-row"><span class="loc-ico">📍</span><span>Calle Dr. Genovevo Figueroa, Poste 6, Buenos Aires</span></div>
+          <div class="loc-row"><span class="loc-ico">📞</span><div><span style="color:var(--gold)">CEL: 753-110-90-83</span><br><span style="color:var(--gold)">CEL: 753-101-07-85</span></div></div>
+        </div>
+        <div class="loc-hrs"><div class="hrs-lbl">Horario</div><div class="hrs-val">Lun · Mié · Vie – Dom · 12:00 pm – 10:00 pm</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-logo"><span class="b">BONA</span><span class="p"> PIZZA</span></div>
+  <p class="ft-tag">¡Simplemente la Mejor!</p>
+  <p class="ft-copy">© 2026 Bona Pizza · Cd. Lázaro Cárdenas, Michoacán · Todos los derechos reservados</p>
+</footer>
+
+<script>
+  /* NAV */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), {passive:true});
+
+  /* MOBILE MENU */
+  const nl = document.getElementById('nl');
+  document.getElementById('nt').addEventListener('click', () => nl.classList.toggle('open'));
+  nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nl.classList.remove('open')));
+
+  /* TABS */
+  const tabBtns = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+
+  function activateTab(btn) {
+    const t = btn.dataset.tab;
+    tabBtns.forEach(b => b.classList.remove('on','gr','gd'));
+    panels.forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
+    if (t === 'especiales') btn.classList.add('gr');
+    if (t === 'suprema' || t === 'bebidas') btn.classList.add('gd');
+    const panel = document.getElementById('p-' + t);
+    if (panel) {
+      panel.classList.add('on');
+      staggerPanel(panel);
+    }
+  }
+
+  tabBtns.forEach(btn => btn.addEventListener('click', () => activateTab(btn)));
+
+  function staggerPanel(panel) {
+    panel.querySelectorAll('[data-sg]').forEach((el, i) => {
+      el.classList.remove('vis');
+      void el.offsetWidth;
+      setTimeout(() => el.classList.add('vis'), i * 65);
+    });
+  }
+
+  /* INTERSECTION OBSERVER — reveal */
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('vis'); ro.unobserve(e.target); }
+    });
+  }, {threshold:.1, rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('[data-rev]').forEach(el => ro.observe(el));
+
+  /* STAGGER on grid enter */
+  const so = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('[data-sg]').forEach((el, i) => {
+          setTimeout(() => el.classList.add('vis'), i * 70);
+        });
+        so.unobserve(e.target);
+      }
+    });
+  }, {threshold:.05, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.locs-grid').forEach(g => so.observe(g));
+
+  /* Initial stagger for active panel */
+  setTimeout(() => staggerPanel(document.getElementById('p-clasicas')), 200);
+
+  /* COUNTER */
+  const co = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const el = e.target;
+        const end = parseInt(el.dataset.ct);
+        const suffix = el.textContent.replace(String(end),'');
+        let cur = 0;
+        const step = end / (1400/16);
+        const tick = () => {
+          cur = Math.min(cur + step, end);
+          el.textContent = Math.floor(cur) + suffix;
+          if (cur < end) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        co.unobserve(el);
+      }
+    });
+  }, {threshold:.5});
+  document.querySelectorAll('[data-ct]').forEach(el => co.observe(el));
+
+  /* PARALLAX hero decorations */
+  const hd1 = document.querySelector('.hd1');
+  const hd2 = document.querySelector('.hd2');
+  window.addEventListener('scroll', () => {
+    const y = scrollY;
+    if(hd1) hd1.style.transform = `translateY(${y * .14}px)`;
+    if(hd2) hd2.style.transform = `translateY(${y * -.09}px)`;
+  }, {passive:true});
+</script>
+</body>
+</html>
